@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: C:\Users\$uperuser\Desktop\Eetakemon_basics_dictionary\src
+ \main\java\edu\upc\dsa\View\Main.java
+Main-Class: edu.upc.dsa.View.Main
+

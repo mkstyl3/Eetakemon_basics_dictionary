@@ -1,0 +1,32 @@
+{
+  1: {
+    "id":1,
+    "nombre":"Juanmon",
+    "tipo":"Fuego",
+    "nivel":"80"
+  },
+  2: {
+    "id":2,
+    "nombre":"Tonimon",
+    "tipo":"Fuego",
+    "nivel":"80"
+  },
+  3: {
+    "id":3,
+    "nombre":"Lluismon",
+    "tipo":"Dragon",
+    "nivel":"80"
+  },
+  4: {
+    "id":4,
+    "nombre":"Rinconmon",
+    "tipo":"Fuego",
+    "nivel":"80"
+  },
+  5: {
+    "id":5,
+    "nombre":"Gilabertmon",
+    "tipo":"Fuego",
+    "nivel":"80"
+  }
+}
