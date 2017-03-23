@@ -8,12 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
-
-import javax.jws.soap.SOAPBinding;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectOutput;
-import java.net.UnknownServiceException;
 import java.util.ArrayList;
 
 /**
@@ -25,6 +21,7 @@ public class EmanagerTest {
 
     @Test
     public void loadEetakemonsMapTest() throws FileNotFoundException, JsonIOException, JsonSyntaxException {
+
         em.loadEetakemonsMap(usr);
         Assert.assertEquals(5, usr.emap.size());
     }
@@ -50,7 +47,7 @@ public class EmanagerTest {
     @Test
     public void getEetakemonFromMapTest() {
         int two = em.getEetakemonFromMap(usr, 2).id;
-        Assert.assertNotEquals(2, two);
+        Assert.assertEquals(2, two);
     }
     @Test
     public void getEtakemonFromMapByNameAproximationTest() {

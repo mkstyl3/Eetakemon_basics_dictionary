@@ -17,6 +17,13 @@ import java.util.*;
 
 public class Emanager {
 
+    private static Emanager instance = null;
+
+    public static Emanager getInstance() {
+        if (instance == null) instance = new Emanager();
+        return instance;
+    }
+
     public void loadEetakemonsMap(User usr) throws FileNotFoundException, JsonIOException, JsonSyntaxException {
         BufferedReader reader = new BufferedReader(new FileReader(new File("./src/main/resources/Eetakemons.txt")));
         Type type = new TypeToken<Map<Integer, Eetakemon>>(){}.getType();
@@ -32,8 +39,8 @@ public class Emanager {
         return usr.emap.remove(key);
     }
 
-    public Eetakemon getEetakemonFromMap(User u, int k) {
-        return u.emap.get(k);
+    public Eetakemon getEetakemonFromMap(User usr, int key) {
+        return usr.emap.get(key);
     }
 
     public ArrayList<Eetakemon> getEtakemonFromMapByNameAproximation (User usr, String input) {
@@ -48,6 +55,7 @@ public class Emanager {
     public void delAllEetakemonsFromMap(User usr) {
         usr.emap.clear();
     }
+
 }
 
 
