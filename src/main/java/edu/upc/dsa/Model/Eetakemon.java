@@ -5,21 +5,22 @@ package edu.upc.dsa.Model;
  */
 public class Eetakemon {
     public int id;
-    public String nombre;
-    public String tipo;
-    public int nivel;
+    public String name;
+    public String type;
+    public int lvl;
+    public Location currentLocation;
 
-    public static int ultimoid = 1;
+    public static int lastid = 1;
 
     public Eetakemon () {
-        this.id = ultimoid;
-        ultimoid++;
+        this.id = lastid;
+        lastid++;
     }
-    public Eetakemon (String nombre, String tipo, int nivel) {
-        this.id = ultimoid;
-        this.nombre = nombre;
-        this.tipo = tipo;
-        this.nivel = nivel;
-        ultimoid++;
+    public Eetakemon (String name, String type, int lvl) {
+        this.id = lastid;
+        this.name = name;
+        this.type = type;
+        this.lvl = lvl;
+        lastid++;
     }
 }

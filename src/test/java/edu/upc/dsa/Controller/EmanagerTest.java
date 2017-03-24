@@ -52,7 +52,7 @@ public class EmanagerTest {
     @Test
     public void getEtakemonFromMapByNameAproximationTest() {
         ArrayList<Eetakemon> reslist = em.getEtakemonFromMapByNameAproximation(usr, "nmon");
-        Assert.assertEquals("Juanmon", reslist.get(0).nombre);
-        Assert.assertEquals("Rinconmon", reslist.get(1).nombre);
+        Assert.assertEquals("Juanmon", reslist.get(0).name);
+        Assert.assertEquals("Rinconmon", reslist.get(1).name);
     }
 }

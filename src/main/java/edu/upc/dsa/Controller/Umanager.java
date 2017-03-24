@@ -1,6 +1,7 @@
 package edu.upc.dsa.Controller;
 
 import edu.upc.dsa.Model.Eetakemon;
+import edu.upc.dsa.Model.Location;
 import edu.upc.dsa.Model.User;
 
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public class Umanager {
     public static HashMap umap;
     public static int ultimoid = 1;
     private static Umanager instance = null;
+    private Location loc;
 
     public static Umanager getInstance() {
         if (instance == null) instance = new Umanager();

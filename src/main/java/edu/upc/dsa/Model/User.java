@@ -10,11 +10,11 @@ public class User {
     public String password;
     public String email;
     public HashMap<Integer, Eetakemon> emap;
-    public static int ultimoid = 1;
+    public static int lastid = 1;
 
     public User () {
         this.emap = new HashMap<>();
-        this.id = ultimoid;
-        ultimoid++;
+        this.id = lastid;
+        lastid++;
     }
 }

@@ -28,7 +28,7 @@ public class Emanager {
         BufferedReader reader = new BufferedReader(new FileReader(new File("./src/main/resources/Eetakemons.txt")));
         Type type = new TypeToken<Map<Integer, Eetakemon>>(){}.getType();
         usr.emap = new Gson().fromJson(reader, type);
-        Eetakemon.ultimoid = usr.emap.size() + 1; //Actualizo a 6, xk cargo 5 Eetakemons
+        Eetakemon.lastid = usr.emap.size() + 1; //Actualizo a 6, xk cargo 5 Eetakemons
     }
     public Eetakemon addEetakemonToUserMap(User usr, Eetakemon e) {
         return usr.emap.put(e.id, e);
@@ -46,7 +46,7 @@ public class Emanager {
     public ArrayList<Eetakemon> getEtakemonFromMapByNameAproximation (User usr, String input) {
         ArrayList<Eetakemon> aproxlist = new ArrayList<>();
         for (Map.Entry<Integer,Eetakemon> entry : usr.emap.entrySet()) {
-            if (entry.getValue().nombre.contains(input)) {
+            if (entry.getValue().name.contains(input)) {
                 aproxlist.add(entry.getValue());
             }
         }
