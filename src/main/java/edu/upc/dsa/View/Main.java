@@ -293,9 +293,7 @@ public class Main {
                         mbucle = false;
                         break;
                     case 7:
-                        Lmanager lm = new Lmanager();
-                        Location loc = new Location (41.27515278, 1.984591667);
-                        Location newloc = lm.pointInCircle(loc, 50.0);
+                        Location newloc = Lmanager.getInstance().randLocationByType()
                         log4j.info("La nueva localizacion es lat: "+newloc.lat+" lon: "+newloc.lon);
                         break;
                     default:
