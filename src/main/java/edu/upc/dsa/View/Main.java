@@ -228,7 +228,7 @@ public class Main {
                                         break;
                                     } else log4j.info("No hay ningun Eetakemomn con esa id.");
                                 } catch (NumberFormatException e) {
-                                    log4j.info("Debe ser un entero correspondiente a alguna id.");
+                                    log4j.info("Debe ser un correspondiente a alguna id.");
                                 }
                             }
                             break;
@@ -293,6 +293,35 @@ public class Main {
                         mbucle = false;
                         break;
                     case 7:
+
+                        int addefrst2 = showEetakemons(usr);
+                        if (addefrst2 == 1) {
+                            String tmp4;
+                            while (bucle4) { // para que en caso de input string regrese al case 3
+                                log4j.info("Inserte una nueva localizacion random a su Eetakemon mediante su id. Escriba return para volver a atras o escriba quit o exit para salir");
+                                tmp4 = s.nextLine();
+                                if (tmp4.equals("quit") || tmp4.equals("exit")) {
+                                    mbucle = false;
+                                    break;
+                                }
+                                if (tmp4.equals("return")) {
+                                    break;
+                                }
+                                try {
+                                    int rmid = Integer.parseInt(tmp4);
+                                    Eetakemon e = Emanager.getInstance().getEetakemonFromMap(usr,rmid);
+                                    if (rmid == e.id) {
+                                        Location newloc = Lmanager.getInstance().randLocationByType(e)
+                                        log4j.info("La nueva localizacion es lat: " + newloc.lat + " lon: " + newloc.lon);
+                                    }
+                                } catch (NumberFormatException e) {
+                                    log4j.info("Debe ser un correspondiente a alguna id.");
+                                }
+                            }
+                            break;
+                        } else if (addefrst2 == -1) mjump = true;
+                        break;
+
                         Location newloc = Lmanager.getInstance().randLocationByType()
                         log4j.info("La nueva localizacion es lat: "+newloc.lat+" lon: "+newloc.lon);
                         break;

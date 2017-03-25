@@ -67,7 +67,7 @@ public class Lmanager {
         loc.lon = (loc.lon*180)/PI;
         return loc;
     }
-    public Location randLocationByType(Eetakemon e) {
+    public Location setEtakemonrRandLocationByType(Eetakemon e) {
         Location loc = new Location();
         if (e.type.equals("Dragon")) loc = pointInCircle(DRAGON_CLOC, 70);
         if (e.type.equals("Fuego")) loc = pointInCircle(FUEGO_CLOC, 70);
