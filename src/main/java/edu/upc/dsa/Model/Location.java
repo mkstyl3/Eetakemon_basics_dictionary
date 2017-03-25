@@ -8,9 +8,8 @@ import static java.lang.Math.PI;
  * Created by $uperuser on 23/03/2017.
  */
 public class Location {
-    public double lon;
     public double lat;
-    public Random r;
+    public double lon;
 
     public Location () {}
     public Location (double lat, double lon) {

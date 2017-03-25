@@ -10,7 +10,6 @@ import edu.upc.dsa.Controller.Emanager;
 import edu.upc.dsa.Controller.Lmanager;
 import edu.upc.dsa.Controller.Umanager;
 import edu.upc.dsa.Model.Eetakemon;
-import edu.upc.dsa.Model.Location;
 import edu.upc.dsa.Model.User;
 import org.apache.log4j.Logger;
 
@@ -52,7 +51,8 @@ public class Main {
         sb.append("3. Borre un Eetakemon.\n");
         sb.append("4. Explore un Eetakemon (tambien por aproximacion).\n");
         sb.append("5. Cargue 5 Eetakemons para pruebas (Solo se puede usar con tu HashMap de Eetakemons vacio).\n");
-        sb.append("6. Salir.\n");
+        sb.append("6. Añada una localizacion random a su Eetakemon.\n");
+        sb.append("7. Salir.\n");
 
         final String str = ("Menu de creacion de Eetakemons. Escriba quit o exit para salir. Escriba return para volver al menu principal.\n1. Introduzca el name del Eetakemon (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
         final String str2 = ("2. Introduzca de que type es (\"Fuego\", \"Tierra\" o \"Dragon\"):");
@@ -251,12 +251,12 @@ public class Main {
                                     if (elist.size() > 1) {
                                         log4j.info("Han habido varias coincidencias");
                                         for (Eetakemon e : elist) {
-                                            System.out.println("id: " + e.id + " name: " + e.name + " type: " + e.type + " lvl: " + e.lvl);
+                                            System.out.println("id: " + e.id + " name: " + e.name + " type: " + e.type + " lvl: " + e.lvl + " loc: " + e.currentlocation);
                                         }
                                         break;
                                     } else if (elist.size() == 1) {
                                         log4j.info("Ha habido una coincidencia: ");
-                                        System.out.println("id: " + elist.get(0).id + " name: " + elist.get(0).name + " type: " + elist.get(0).type + " lvl: " + elist.get(0).lvl);
+                                        System.out.println("id: " + elist.get(0).id + " name: " + elist.get(0).name + " type: " + elist.get(0).type + " lvl: " + elist.get(0).lvl +  " loc: " + elist.get(0).currentlocation.lat + "," + elist.get(0).currentlocation.lon);
                                         break;
                                     } else if (elist.size() == 0) {
                                         log4j.info("No ha habido ninguna coincidencia.");
@@ -290,15 +290,11 @@ public class Main {
                         }
                         break;
                     case 6:
-                        mbucle = false;
-                        break;
-                    case 7:
-
                         int addefrst2 = showEetakemons(usr);
                         if (addefrst2 == 1) {
                             String tmp4;
                             while (bucle4) { // para que en caso de input string regrese al case 3
-                                log4j.info("Inserte una nueva localizacion random a su Eetakemon mediante su id. Escriba return para volver a atras o escriba quit o exit para salir");
+                                log4j.info("Inserte una nueva localizacion random a su Eetakemon mediante su id. Escriba return para volver a atras o escriba quit o exit para salir.");
                                 tmp4 = s.nextLine();
                                 if (tmp4.equals("quit") || tmp4.equals("exit")) {
                                     mbucle = false;
@@ -309,10 +305,10 @@ public class Main {
                                 }
                                 try {
                                     int rmid = Integer.parseInt(tmp4);
-                                    Eetakemon e = Emanager.getInstance().getEetakemonFromMap(usr,rmid);
-                                    if (rmid == e.id) {
-                                        Location newloc = Lmanager.getInstance().randLocationByType(e)
-                                        log4j.info("La nueva localizacion es lat: " + newloc.lat + " lon: " + newloc.lon);
+                                    if (rmid > 0 && rmid <= usr.emap.size()) {
+                                        Lmanager.getInstance().setEtakemonRandLocationByType(Emanager.getInstance().getEetakemonFromMap(usr, rmid));
+                                        log4j.info("La nueva localizacion es lat: " + usr.emap.get(rmid).currentlocation.lat + " lon: " + usr.emap.get(rmid).currentlocation.lon);
+                                        break;
                                     }
                                 } catch (NumberFormatException e) {
                                     log4j.info("Debe ser un correspondiente a alguna id.");
@@ -321,9 +317,8 @@ public class Main {
                             break;
                         } else if (addefrst2 == -1) mjump = true;
                         break;
-
-                        Location newloc = Lmanager.getInstance().randLocationByType()
-                        log4j.info("La nueva localizacion es lat: "+newloc.lat+" lon: "+newloc.lon);
+                    case 7:
+                        mbucle = false;
                         break;
                     default:
                         log4j.info("El numero que ha escrito no corresponde a ninguna opcion.");

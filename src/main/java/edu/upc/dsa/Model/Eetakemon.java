@@ -8,7 +8,7 @@ public class Eetakemon {
     public String name;
     public String type;
     public int lvl;
-    public Location currentLocation= null;
+    public Location currentlocation;
 
     public static int lastid = 1;
 
@@ -24,6 +24,6 @@ public class Eetakemon {
         lastid++;
     }
     public void setEetakemonLocation(Location loc) {
-        currentLocation = loc;
+        currentlocation = loc;
     }
 }

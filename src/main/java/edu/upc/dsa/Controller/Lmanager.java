@@ -14,13 +14,8 @@ public class Lmanager {
 
     private static Lmanager instance = null;
     private final double EARTH_RADIUS = 6371000; /* meters  */
-    private final double DEG_TO_RAD =  Math.PI / 180.0;
     private final double THREE_PI = Math.PI*3;
     private final double TWO_PI = Math.PI*2;
-    private final Location DRAGON_CLOC = new Location(41.27558333, 1.98675);
-    private final Location FUEGO_CLOC = new Location(41.27514444, 1.984991667);
-    private final Location TIERRA_CLOC = new Location(41.27455556, 1.987327778);
-
 
     public static Lmanager getInstance() {
         if (instance == null) instance = new Lmanager();
@@ -28,7 +23,7 @@ public class Lmanager {
     }
 
     private Location pointAtDistance(Location inputCoords, double distance) {
-        Location coords =  toRadians(inputCoords);
+        Location coords = toRadians(inputCoords);
         double sinLat =  Math.sin(coords.lat);
         double cosLat =  Math.cos(coords.lat);
 
@@ -42,15 +37,11 @@ public class Lmanager {
 
         Location resultcoords = new Location();
         resultcoords.lat = Math.asin(sinLat*cosTheta+cosLat*sinTheta*cosBearing);
-        resultcoords.lon = coords.lon +
-                Math.atan2( sinBearing*sinTheta*cosLat, cosTheta-sinLat*Math.sin(resultcoords.lat)
-                );
+        resultcoords.lon = coords.lon + Math.atan2 (sinBearing*sinTheta*cosLat, cosTheta-sinLat*Math.sin(resultcoords.lat));
     /* normalize -PI -> +PI radians (-180 - 180 deg)*/
-        resultcoords.lon = ((resultcoords.lon+THREE_PI)%TWO_PI)- PI;
-
+        resultcoords.lon = ((resultcoords.lon+THREE_PI)%TWO_PI) - PI;
         return toDegrees(resultcoords);
     }
-
     public Location pointInCircle(Location coord, double distance) {
     double rnd =  Math.random();
     /*use square root of random number to avoid high density at the center*/
@@ -67,11 +58,9 @@ public class Lmanager {
         loc.lon = (loc.lon*180)/PI;
         return loc;
     }
-    public Location setEtakemonrRandLocationByType(Eetakemon e) {
-        Location loc = new Location();
-        if (e.type.equals("Dragon")) loc = pointInCircle(DRAGON_CLOC, 70);
-        if (e.type.equals("Fuego")) loc = pointInCircle(FUEGO_CLOC, 70);
-        if (e.type.equals("Tierra")) loc = pointInCircle(TIERRA_CLOC, 28);
-        return loc;
+    public void setEtakemonRandLocationByType(Eetakemon e) {
+        if (e.type.equals("Dragon")) e.currentlocation = pointInCircle(new Location(41.27558333, 1.98675), 70);
+        if (e.type.equals("Fuego")) e.currentlocation = pointInCircle(new Location(41.27514444, 1.984991667), 70);
+        if (e.type.equals("Tierra")) e.currentlocation = pointInCircle(new Location(41.27455556, 1.987327778), 28);
     }
 }

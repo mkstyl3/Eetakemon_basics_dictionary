@@ -3,30 +3,50 @@
     "id":1,
     "name":"Juanmon",
     "type":"Fuego",
-    "lvl":"80"
+    "lvl":"80",
+    "currentlocation": {
+      "lat":null,
+      "lon":null
+    }
   },
   2: {
     "id":2,
     "name":"Tonimon",
     "type":"Fuego",
-    "lvl":"80"
+    "lvl":"80",
+    "currentlocation": {
+      "lat":null,
+      "lon":null
+    }
   },
   3: {
     "id":3,
     "name":"Lluismon",
     "type":"Dragon",
-    "lvl":"80"
+    "lvl":"80",
+    "currentlocation": {
+      "lat":null,
+      "lon":null
+    }
   },
   4: {
     "id":4,
     "name":"Rinconmon",
     "type":"Fuego",
-    "lvl":"80"
+    "lvl":"80",
+    "currentlocation": {
+      "lat":null,
+      "lon":null
+    }
   },
   5: {
     "id":5,
     "name":"Gilabertmon",
     "type":"Fuego",
-    "lvl":"80"
+    "lvl":"80",
+    "currentlocation": {
+      "lat":null,
+      "lon":null
+    }
   }
 }
