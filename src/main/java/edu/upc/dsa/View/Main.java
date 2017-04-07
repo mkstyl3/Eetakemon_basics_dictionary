@@ -10,16 +10,18 @@ import edu.upc.dsa.Controller.Emanager;
 import edu.upc.dsa.Controller.Lmanager;
 import edu.upc.dsa.Controller.Umanager;
 import edu.upc.dsa.Model.Eetakemon;
+import edu.upc.dsa.Model.Location;
 import edu.upc.dsa.Model.User;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 import java.util.*;
 
 //               La intencionalidad de este programa es aprender jugando con las funciones de clase de EetakemonGo //
 //               creando una interfaz interactiva de consola capaz de hacer un return a la opcion anterior y       //
 //               cerrarse escribiendo exit o quit. Podria utilizarse para conectar con la base de datos en un      //
-//               futuro (aunque es improbable xD).                                                                 //
+//               futuro.                                                                                           //
 //                                                                                                                 //
 public class Main {
 
@@ -36,14 +38,16 @@ public class Main {
             return -1;
         }
     }
-    public static void main(String[] args) {
 
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
 
         Scanner s = new Scanner(System.in);
-        User usr = new User(); // Habria que hacer un login para diferenciar entre users...
+        User usr;
+        // Habria que hacer un login para diferenciar entre users...
+
         boolean mbucle = true;
         boolean mjump = false;
-        boolean successful = false;
+        int successful = -1;
 
         final StringBuffer sb = new StringBuffer("Menu principal. Escriba quit o exit para salir. Escriba return para volver a este menu.\n");
         sb.append("1. Añada un Eetakemon.\n");
@@ -54,29 +58,34 @@ public class Main {
         sb.append("6. Añada una localizacion random a su Eetakemon.\n");
         sb.append("7. Salir.\n");
 
-        final String str = ("Menu de creacion de Eetakemons. Escriba quit o exit para salir. Escriba return para volver al menu principal.\n1. Introduzca el name del Eetakemon (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
+        final String str = ("Menu de creacion de Eetakemons. Escriba quit o exit para salir. Escriba return para volver al menu principal.\n1. Introduzca el nombre del Eetakemon (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
         final String str2 = ("2. Introduzca de que type es (\"Fuego\", \"Tierra\" o \"Dragon\"):");
         final String str3 = ("3. Introduzca el lvl (0-100):");
         final String str4 = ("Introduzca el id del Eetakemon quiere borrar. Escriba quit o exit para salir. Escriba return para volver al menu principal.");
         final String str8 = ("Tiene que introducir un type valido (\"Fuego\", \"Tierra\" o \"Dragon\"):");
-        final String str10 = ("Tiene que introducir un name valido (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
+        final String str10 = ("Tiene que introducir un nombre valido (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
         final String str11 = ("Introduzca el name del Eetakemon que quiere explorar o una aproximacion para realizar la busqueda. Escriba quit o exit para salir. Escriba return para volver al menu principal.");
         final String str12 = ("Cargando sus Eetakemons... Escriba quit o exit para salir. Escriba return para volver al menu principal.");
         final StringBuffer sb2 = new StringBuffer("Bienvenido a su gestor de Eetakemons! Para entrar escriba sus credenciales o escriba exit para salir: \n");
         sb2.append("Escriba su username: ");
         final String str13 = ("Escriba su password: ");
-
+        final String str14 = ("Menu de creacion de Usuarios. Escriba quit o exit para salir. Escriba return para volver al menu principal.\n1. Introduzca el nombre del User (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
+        final String str15 = ("Escriba su password:");
+        final String str16 = ("Se le asignara una localizacion por defecto. En teoria, en el server, pedira un gson con la localizacion del user");
         while (mbucle) {
             boolean bucle2 = true;
             boolean sm1bucle = true;
+            boolean sm2bucle = true;
             boolean bucle4 = true;
             boolean bucle5 = true;
+            boolean bucle6 = true;
             String tmp = null;
+            boolean goto22 = false;
             int main = 1;
             String trypw = null;
 
             try {
-                while(!successful) {
+                while(successful != 1 || successful != 0) {
                     System.out.print(sb2);
                     String tryname = s.nextLine();
                     if (tryname.equals("quit") || tryname.equals("exit")) {
@@ -92,9 +101,13 @@ public class Main {
                         break;
                     }
                     successful = Umanager.getInstance().usrAuthentication(tryname, trypw);
-                    if (successful) {
-                        successful = true;
-                        log4j.info("Access granted!");
+                    if (successful == 1) {
+                        usr = new User(true);                      // Se inicializa usr //
+                        log4j.info("Access granted! Welcome admin "+tryname);
+                    }
+                    if (successful == 1) {
+                        usr = new User(false);                      // Se inicializa usr //
+                        log4j.info("Access granted! Welcome user "+tryname);
                     } else log4j.info("Access denied.");
                 }
                 if (!mjump) {
@@ -103,7 +116,9 @@ public class Main {
                     main = Integer.parseInt(tmp);
                 }
                 mjump = false;
+                usr = new User();
                 switch (main) {
+
                     case 1:
                         int sm1 = 1;
                         String ename = null;
@@ -153,7 +168,6 @@ public class Main {
                                     while (bucle2) { // para que en caso de input string regrese al case 3
                                         System.out.println(str3);
                                         tmp2 = s.nextLine();
-
                                         if (tmp2.equals("quit") || tmp2.equals("exit")) {
                                             sm1bucle = false;
                                             break;
@@ -251,12 +265,12 @@ public class Main {
                                     if (elist.size() > 1) {
                                         log4j.info("Han habido varias coincidencias");
                                         for (Eetakemon e : elist) {
-                                            System.out.println("id: " + e.id + " name: " + e.name + " type: " + e.type + " lvl: " + e.lvl + " loc: " + e.currentlocation);
+                                            System.out.println("id: " + e.id + " name: " + e.name + " type: " + e.type + " lvl: " + e.lvl + " loc: " + e.currentloc);
                                         }
                                         break;
                                     } else if (elist.size() == 1) {
                                         log4j.info("Ha habido una coincidencia: ");
-                                        System.out.println("id: " + elist.get(0).id + " name: " + elist.get(0).name + " type: " + elist.get(0).type + " lvl: " + elist.get(0).lvl +  " loc: " + elist.get(0).currentlocation.lat + "," + elist.get(0).currentlocation.lon);
+                                        System.out.println("id: " + elist.get(0).id + " name: " + elist.get(0).name + " type: " + elist.get(0).type + " lvl: " + elist.get(0).lvl +  " loc: " + elist.get(0).currentloc.lat + "," + elist.get(0).currentloc.lon);
                                         break;
                                     } else if (elist.size() == 0) {
                                         log4j.info("No ha habido ninguna coincidencia.");
@@ -307,7 +321,7 @@ public class Main {
                                     int rmid = Integer.parseInt(tmp4);
                                     if (rmid > 0 && rmid <= usr.emap.size()) {
                                         Lmanager.getInstance().setEtakemonRandLocationByType(Emanager.getInstance().getEetakemonFromMap(usr, rmid));
-                                        log4j.info("La nueva localizacion es lat: " + usr.emap.get(rmid).currentlocation.lat + " lon: " + usr.emap.get(rmid).currentlocation.lon);
+                                        log4j.info("La nueva localizacion es lat: " + usr.emap.get(rmid).currentloc.lat + " lon: " + usr.emap.get(rmid).currentloc.lon);
                                         break;
                                     }
                                 } catch (NumberFormatException e) {
@@ -318,6 +332,94 @@ public class Main {
                         } else if (addefrst2 == -1) mjump = true;
                         break;
                     case 7:
+                        int sm2 = 1;
+                        String uname = null;
+                        String upassword = null;
+                        String uemail = null;
+                        while (sm2bucle) {
+                            switch (sm2) {
+                                case 1:
+                                    if (!goto22) {
+                                        System.out.println(str14);
+                                        uname = s.nextLine();
+                                        while (uname.length() <= 2 || uname.length() >= 16 || Character.isDigit(uname.charAt(0))) {
+                                            System.out.println(str10);
+                                            uname = s.nextLine();
+                                        }
+                                        if (uname.equals("return")) {
+                                            sm2bucle = false;
+                                            mjump = false;
+                                            break;
+                                        }
+                                        if (uname.equals("quit") || uname.equals("exit")) {
+                                            sm2bucle = false;
+                                            break;
+                                        }
+                                    }
+                                case 2:
+                                    System.out.println(str13);
+                                    upassword = s.nextLine();
+                                    while (upassword.length() <= 2 || upassword.length() >= 16 || upassword.equals("exit") || upassword.equals("quit") || upassword.equals("return")) {
+                                        System.out.println(str8);
+                                        upassword = s.nextLine();
+                                    }
+                                    if (upassword.equals("return")) {
+                                        goto22 = false;
+                                        sm2 = 1;
+                                        mjump = false;
+                                        break;
+                                    }
+                                    if (upassword.equals("quit") || upassword.equals("exit")) {
+                                        sm2bucle = false;
+                                        break;
+                                    }
+                                case 3:
+                                    System.out.println(str15);
+                                    uemail = s.nextLine();
+                                    while (uemail.length() <= 2 || uemail.length() >= 20 || uemail.contains("@") || uemail.equals("exit") || uemail.equals("quit") || uemail.equals("return")) {
+                                        System.out.println("Introduzca un email valido.");
+                                        uemail = s.nextLine();
+                                    }
+                                    if (uemail.equals("return")) {
+                                        goto22 = false;
+                                        sm2 = 1;
+                                        mjump = false;
+                                        break;
+                                    }
+                                    if (uemail.equals("quit") || uemail.equals("exit")) {
+                                        sm2bucle = false;
+                                        break;
+                                    } break;
+                                case 4:
+                                    System.out.println(str16);
+                                    int res = Umanager.getInstance().setUserLoc(usr, new Location(41.27514444, 1.984991667));
+                                    if (res == 1) {
+                                        log4j.info("Localizacion guardada en el user: "+ usr.id);
+                                    }
+                                    if (res == -1) {
+                                    log4j.info("No se ha guardado correctamente la localizacion del user");
+                                    } break;
+                            }
+                        }
+                        if (uname.equals("return")) {
+                            log4j.info("Volviendo al menu principal...");
+                            break;
+                        }
+                        if (uname.equals("quit") || uname.equals("exit") || upassword.equals("quit") || upassword.equals("exit") || uemail.equals("quit") || uemail.equals("exit")) {
+                            log4j.info("Cerrando el programa.");
+                            mbucle = false;
+                            break;
+                        }
+                        if (upassword.equals("return")) {
+                            log4j.info("Volviendo al menu principal...");
+                            break;
+                        }
+                        if (uemail.equals("return")) {
+                            log4j.info("Volviendo al menu principal...");
+                            break;
+                        }
+                        break;
+                    case 8:
                         mbucle = false;
                         break;
                     default:
@@ -339,8 +441,6 @@ public class Main {
             } catch (MissingResourceException e) {
                 log4j.info("Fallo en el programa. No se le ha podido dar autenticacion. Usuario inexistente.");
             }
-
         }
-
     }
 }

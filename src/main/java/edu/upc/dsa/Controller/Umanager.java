@@ -12,11 +12,9 @@ import java.util.ResourceBundle;
  * Created by $uperuser on 23/03/2017.
  */
 public class Umanager {
-
-    public static HashMap umap;
+    public static HashMap<Integer, User> umap;
     public static int ultimoid = 1;
     private static Umanager instance = null;
-    private Location loc;
 
     public static Umanager getInstance() {
         if (instance == null) instance = new Umanager();
@@ -25,8 +23,10 @@ public class Umanager {
     public Umanager () {
         umap = new HashMap<>();
     }
+
     public Object addUserToUsersMap(User usr) {
-        return umap.put(usr.id, usr);
+        if(usr.isadmin) return umap.put(usr.id, usr);
+        else return usr;
     }
     public Object delUserFromMap(int key) {
         return umap.remove(key);
@@ -35,12 +35,26 @@ public class Umanager {
         return umap.get(key);
     }
     public void delUsersFromMap() { umap.clear(); }
-    public boolean usrAuthentication(String usrname, String pw) throws NullPointerException, MissingResourceException {
-        Boolean successful = false;
+
+    public int usrAuthentication(String usrname, String pw) throws NullPointerException, MissingResourceException {
+        int successful = -1;
+        int isadmin = -1;
         ResourceBundle usrdata = ResourceBundle.getBundle("Users_data");
-        if (pw.equals(usrdata.getString(usrname))) {
-            return successful = true;
+        ResourceBundle admincheck = ResourceBundle.getBundle("Admin_users");
+
+        if (pw.equals(admincheck.getString(usrname))) {
+            return isadmin = 1;
         }
-        else return successful;
+        if (pw.equals(usrdata.getString(usrname))) {
+            return successful = 0;
+        }
+        return successful;
+    }
+    public int setUserLoc (User usr, Location loc) {
+        if (usr.isadmin) {
+            usr.currentloc = loc;
+            return 1;
+        }
+        else return -1;
     }
 }

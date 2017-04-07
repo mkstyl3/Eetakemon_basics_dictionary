@@ -59,8 +59,8 @@ public class Lmanager {
         return loc;
     }
     public void setEtakemonRandLocationByType(Eetakemon e) {
-        if (e.type.equals("Dragon")) e.currentlocation = pointInCircle(new Location(41.27558333, 1.98675), 70);
-        if (e.type.equals("Fuego")) e.currentlocation = pointInCircle(new Location(41.27514444, 1.984991667), 70);
-        if (e.type.equals("Tierra")) e.currentlocation = pointInCircle(new Location(41.27455556, 1.987327778), 28);
+        if (e.type.equals("Dragon")) e.currentloc = pointInCircle(new Location(41.27558333, 1.98675), 70);
+        if (e.type.equals("Fuego")) e.currentloc = pointInCircle(new Location(41.27514444, 1.984991667), 70);
+        if (e.type.equals("Tierra")) e.currentloc = pointInCircle(new Location(41.27455556, 1.987327778), 28);
     }
 }

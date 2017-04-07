@@ -11,10 +11,19 @@ public class User {
     public String email;
     public HashMap<Integer, Eetakemon> emap;
     public static int lastid = 1;
+    public boolean isadmin;
+    public Location currentloc;
 
     public User () {
         this.emap = new HashMap<>();
         this.id = lastid;
         lastid++;
+    }
+    public User(boolean isadmin) {
+        this.isadmin = isadmin;
+    }
+
+    public boolean isAdmin() {
+        return isadmin;
     }
 }
