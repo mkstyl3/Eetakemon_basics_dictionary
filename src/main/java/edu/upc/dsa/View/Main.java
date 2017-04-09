@@ -6,6 +6,7 @@ package edu.upc.dsa.View;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import edu.upc.dsa.Controller.AdminException;
 import edu.upc.dsa.Controller.Emanager;
 import edu.upc.dsa.Controller.Lmanager;
 import edu.upc.dsa.Controller.Umanager;
@@ -16,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 //               La intencionalidad de este programa es aprender jugando con las funciones de clase de EetakemonGo //
@@ -38,16 +40,15 @@ public class Main {
             return -1;
         }
     }
-
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
 
         Scanner s = new Scanner(System.in);
-        User usr;
-        // Habria que hacer un login para diferenciar entre users...
+        User usr = new User();
 
         boolean mbucle = true;
         boolean mjump = false;
         int successful = -1;
+
 
         final StringBuffer sb = new StringBuffer("Menu principal. Escriba quit o exit para salir. Escriba return para volver a este menu.\n");
         sb.append("1. Añada un Eetakemon.\n");
@@ -83,30 +84,29 @@ public class Main {
             boolean goto22 = false;
             int main = 1;
             String trypw = null;
-
             try {
-                while(successful != 1 || successful != 0) {
+                while(successful == -1) {
                     System.out.print(sb2);
                     String tryname = s.nextLine();
                     if (tryname.equals("quit") || tryname.equals("exit")) {
-                        main = 6;
+                        main = 8;
                         mjump = true;
                         break;
                     }
                     System.out.print(str13);
                     trypw = s.nextLine();
                     if (trypw.equals("quit") || trypw.equals("exit")) {
-                        main = 6;
+                        main = 8;
                         mjump = true;
                         break;
                     }
                     successful = Umanager.getInstance().usrAuthentication(tryname, trypw);
                     if (successful == 1) {
-                        usr = new User(true);                      // Se inicializa usr //
+                        usr.isadmin = true;                   // Se inicializa usr con derechos de administrador//
                         log4j.info("Access granted! Welcome admin "+tryname);
                     }
-                    if (successful == 1) {
-                        usr = new User(false);                      // Se inicializa usr //
+                    else if  (successful == 0) {
+                        usr.isadmin = false;                         // Se inicializa usr //
                         log4j.info("Access granted! Welcome user "+tryname);
                     } else log4j.info("Access denied.");
                 }
@@ -116,9 +116,7 @@ public class Main {
                     main = Integer.parseInt(tmp);
                 }
                 mjump = false;
-                usr = new User();
                 switch (main) {
-
                     case 1:
                         int sm1 = 1;
                         String ename = null;
@@ -181,18 +179,20 @@ public class Main {
                                             elvl = Integer.parseInt(tmp2);
                                             if (elvl > 0 && elvl < 101) {
                                                 Eetakemon e = new Eetakemon(ename, etype, elvl);
-                                                Eetakemon etmp = Emanager.getInstance().addEetakemonToUserMap(usr, e);
+                                                Object etmp = Emanager.getInstance().addEetakemonToUserMap(usr, e);
                                                 if (etmp == null) {
                                                     log4j.info("Eetakemon añadido correctamente! No se ha sobreescrito ningun Eetakemon anterior.");
                                                     sm1bucle = false;
                                                     break;
                                                 } else {
-                                                    log4j.info("Eetakemon añadido correctamente! Se ha sobreescrito el Eetakemon: " + etmp.id);
+                                                    Field f = etmp.getClass().getField("id");
+                                                    log4j.info("Eetakemon añadido correctamente! Se ha sobreescrito el Eetakemon: " + f.getInt(etmp));
                                                     sm1bucle = false;
                                                     break;
                                                 }
                                             }
-                                        } catch (NumberFormatException e) {
+                                        }
+                                        catch (NumberFormatException e) {
                                             log4j.info("Debe ser un numero entre 0 y 100");
                                         }
                                     }
@@ -336,10 +336,11 @@ public class Main {
                         String uname = null;
                         String upassword = null;
                         String uemail = null;
+                        boolean goto2bis = false;
                         while (sm2bucle) {
                             switch (sm2) {
                                 case 1:
-                                    if (!goto22) {
+                                    if (!goto2bis) {
                                         System.out.println(str14);
                                         uname = s.nextLine();
                                         while (uname.length() <= 2 || uname.length() >= 16 || Character.isDigit(uname.charAt(0))) {
@@ -348,24 +349,24 @@ public class Main {
                                         }
                                         if (uname.equals("return")) {
                                             sm2bucle = false;
-                                            mjump = false;
                                             break;
-                                        }
-                                        if (uname.equals("quit") || uname.equals("exit")) {
+                                        } else if (uname.equals("quit") || uname.equals("exit")) {
                                             sm2bucle = false;
+                                            sm1bucle = false;
                                             break;
                                         }
                                     }
                                 case 2:
                                     System.out.println(str13);
                                     upassword = s.nextLine();
-                                    while (upassword.length() <= 2 || upassword.length() >= 16 || upassword.equals("exit") || upassword.equals("quit") || upassword.equals("return")) {
+                                    while (upassword.length() <= 2 || upassword.length() >= 16) {
                                         System.out.println(str8);
                                         upassword = s.nextLine();
                                     }
                                     if (upassword.equals("return")) {
-                                        goto22 = false;
+                                        goto2bis = false;
                                         sm2 = 1;
+                                        sm1 = 7;
                                         mjump = false;
                                         break;
                                     }
@@ -376,13 +377,14 @@ public class Main {
                                 case 3:
                                     System.out.println(str15);
                                     uemail = s.nextLine();
-                                    while (uemail.length() <= 2 || uemail.length() >= 20 || uemail.contains("@") || uemail.equals("exit") || uemail.equals("quit") || uemail.equals("return")) {
+                                    while (uemail.length() <= 2 || uemail.length() >= 20 || uemail.contains("@")) {
                                         System.out.println("Introduzca un email valido.");
                                         uemail = s.nextLine();
                                     }
                                     if (uemail.equals("return")) {
-                                        goto22 = false;
-                                        sm2 = 1;
+                                        goto2bis = false;
+                                        sm2 = 2;
+                                        sm1 = 7;
                                         mjump = false;
                                         break;
                                     }
@@ -398,6 +400,22 @@ public class Main {
                                     }
                                     if (res == -1) {
                                     log4j.info("No se ha guardado correctamente la localizacion del user");
+                                    }
+                                    try {
+
+                                        User u = new User(uname, upassword, uemail);
+                                            Object utmp = Umanager.getInstance().addUserToUsersMap(u);
+                                            if (utmp == null) {
+                                                log4j.info("Usuario añadido correctamente! No se ha sobreescrito ningun Usuario anterior.");
+                                                sm1bucle = false;
+                                                break;
+                                            } else {
+                                                Field f = utmp.getClass().getField("id");
+                                                log4j.info("Usuario añadido correctamente! Se ha sobreescrito el Usuario: " + f.getInt(utmp));
+                                                break;
+                                            }
+                                    } catch (AdminException e) {
+                                        log4j.info("Necesitas ser administrador para usar esta funcion.");
                                     } break;
                             }
                         }

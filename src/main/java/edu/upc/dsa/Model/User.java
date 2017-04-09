@@ -7,6 +7,7 @@ import java.util.*;
  */
 public class User {
     public int id;
+    public String username;
     public String password;
     public String email;
     public HashMap<Integer, Eetakemon> emap;
@@ -14,13 +15,15 @@ public class User {
     public boolean isadmin;
     public Location currentloc;
 
-    public User () {
+    public User (String username, String password, String email) {
         this.emap = new HashMap<>();
         this.id = lastid;
         lastid++;
     }
-    public User(boolean isadmin) {
-        this.isadmin = isadmin;
+    public User() {
+        this.emap = new HashMap<>();
+        this.id = lastid;
+        lastid++;
     }
 
     public boolean isAdmin() {
