@@ -47,8 +47,6 @@ public class Main {
 
         boolean mbucle = true;
         boolean mjump = false;
-        int successful = -1;
-
 
         final StringBuffer sb = new StringBuffer("Menu principal. Escriba quit o exit para salir. Escriba return para volver a este menu.\n");
         sb.append("1. Añada un Eetakemon.\n");
@@ -84,6 +82,7 @@ public class Main {
             boolean goto22 = false;
             int main = 1;
             String trypw = null;
+            int successful = -1;
             try {
                 while(successful == -1) {
                     System.out.print(sb2);
@@ -100,15 +99,18 @@ public class Main {
                         mjump = true;
                         break;
                     }
-                    successful = Umanager.getInstance().usrAuthentication(tryname, trypw);
-                    if (successful == 1) {
-                        usr.isadmin = true;                   // Se inicializa usr con derechos de administrador//
-                        log4j.info("Access granted! Welcome admin "+tryname);
+                    try {
+                        successful = Umanager.getInstance().usrAuthentication(tryname, trypw);
+                        if (successful == 1) {
+                            usr.isadmin = true;                   // Se inicializa usr con derechos de administrador//
+                            log4j.info("Access granted! Welcome admin "+tryname);
+                        } else if  (successful == 0) {
+                            usr.isadmin = false;                         // Se inicializa usr //
+                            log4j.info("Access granted! Welcome user "+tryname);
+                        } else if (successful == -1) log4j.info("Access denied.");
+                    } catch (MissingResourceException e){
+                        log4j.info("No se ha podido encontrar un user con esa password."+tryname);
                     }
-                    else if  (successful == 0) {
-                        usr.isadmin = false;                         // Se inicializa usr //
-                        log4j.info("Access granted! Welcome user "+tryname);
-                    } else log4j.info("Access denied.");
                 }
                 if (!mjump) {
                     System.out.print(sb);
