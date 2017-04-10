@@ -11,11 +11,14 @@ public class User {
     public String password;
     public String email;
     public HashMap<Integer, Eetakemon> emap;
-    public static int lastid = 1;
+    public static int lastid = 0;
     public boolean isadmin;
     public Location currentloc;
 
     public User (String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
         this.emap = new HashMap<>();
         this.id = lastid;
         lastid++;

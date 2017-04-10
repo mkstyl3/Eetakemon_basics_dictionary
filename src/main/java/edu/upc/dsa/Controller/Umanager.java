@@ -4,8 +4,8 @@ import edu.upc.dsa.Model.Eetakemon;
 import edu.upc.dsa.Model.Location;
 import edu.upc.dsa.Model.User;
 
-import java.io.ObjectOutput;
-import java.io.Serializable;
+import javax.swing.text.StyledEditorKit;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -15,6 +15,9 @@ public class Umanager {
     public static HashMap<Integer, User> umap;
     public static int ultimoid = 1;
     private static Umanager instance = null;
+    ResourceBundle rbdata = ResourceBundle.getBundle("Users_data");
+    ResourceBundle rbadmin = ResourceBundle.getBundle("Admin_users");
+
 
     public static Umanager getInstance() {
         if (instance == null) instance = new Umanager();
@@ -25,8 +28,17 @@ public class Umanager {
         umap = new HashMap<>();
     }
 
-    public Object addUserToUsersMap(User usr) throws AdminException {
-        if (usr.isadmin) return umap.put(usr.id, usr);
+    public Object addUserToUsersMap(User usr, User newusr) throws AdminException {
+       //Boolean bool = fa;
+        if (usr.isadmin) {
+            //Properties prop = new Properties();
+            //prop.setProperty(newusr.username,newusr.password); //No se puede escribir en el properties...
+            //File fileout = new File("Users_data.properties");
+            //prop.store(new FileOutputStream(fileout), null);
+            if(!userCheck(rbdata,newusr.username, newusr.password))
+                return umap.put(newusr.id, newusr);
+            else return false;
+        }
         else {
             throw new AdminException();
         }
@@ -45,19 +57,16 @@ public class Umanager {
     }
 
     public int usrAuthentication(String usrname, String pw) throws NullPointerException, MissingResourceException {
-        ResourceBundle rbdata = ResourceBundle.getBundle("Users_data");
-        ResourceBundle rbadmin = ResourceBundle.getBundle("Admin_users");
-
         if (userCheck(rbdata, usrname, pw)) return 0;
         else if (userCheck(rbadmin, usrname, pw)) return 1;
         else return -1;
     }
 
-    public int setUserLoc(User usr, Location loc) {
+    public Boolean setUserLoc(User usr, User u, Location loc) throws AdminException {
         if (usr.isadmin) {
-            usr.currentloc = loc;
-            return 1;
-        } else return -1;
+            u.currentloc = loc;
+            return true;
+        } else throw new AdminException();
     }
 
     public boolean userCheck(ResourceBundle rbdata, String usrname, String pw) {

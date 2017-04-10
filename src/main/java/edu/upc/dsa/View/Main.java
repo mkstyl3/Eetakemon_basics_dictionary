@@ -16,6 +16,7 @@ import edu.upc.dsa.Model.User;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -44,9 +45,11 @@ public class Main {
 
         Scanner s = new Scanner(System.in);
         User usr = new User();
-
+        int main = 1;
         boolean mbucle = true;
         boolean mjump = false;
+        int successful = -1;
+        int sm2 = 1;
 
         final StringBuffer sb = new StringBuffer("Menu principal. Escriba quit o exit para salir. Escriba return para volver a este menu.\n");
         sb.append("1. Añada un Eetakemon.\n");
@@ -55,7 +58,8 @@ public class Main {
         sb.append("4. Explore un Eetakemon (tambien por aproximacion).\n");
         sb.append("5. Cargue 5 Eetakemons para pruebas (Solo se puede usar con tu HashMap de Eetakemons vacio).\n");
         sb.append("6. Añada una localizacion random a su Eetakemon.\n");
-        sb.append("7. Salir.\n");
+        sb.append("7. Añada un nuevo User.\n");
+        sb.append("8. Salir.\n");
 
         final String str = ("Menu de creacion de Eetakemons. Escriba quit o exit para salir. Escriba return para volver al menu principal.\n1. Introduzca el nombre del Eetakemon (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
         final String str2 = ("2. Introduzca de que type es (\"Fuego\", \"Tierra\" o \"Dragon\"):");
@@ -69,8 +73,10 @@ public class Main {
         sb2.append("Escriba su username: ");
         final String str13 = ("Escriba su password: ");
         final String str14 = ("Menu de creacion de Usuarios. Escriba quit o exit para salir. Escriba return para volver al menu principal.\n1. Introduzca el nombre del User (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
-        final String str15 = ("Escriba su password:");
-        final String str16 = ("Se le asignara una localizacion por defecto. En teoria, en el server, pedira un gson con la localizacion del user");
+        final String str15 = ("Escriba un email valido:");
+        final String str16 = ("Se le ha asignado una localizacion por defecto. En teoria, en el server, pedira un json con la localizacion del user");
+        final String str17 = ("Tiene que introducir password valida (Debe contener de 3 a 15 caracteres:");
+
         while (mbucle) {
             boolean bucle2 = true;
             boolean sm1bucle = true;
@@ -80,9 +86,7 @@ public class Main {
             boolean bucle6 = true;
             String tmp = null;
             boolean goto22 = false;
-            int main = 1;
             String trypw = null;
-            int successful = -1;
             try {
                 while(successful == -1) {
                     System.out.print(sb2);
@@ -102,9 +106,17 @@ public class Main {
                     try {
                         successful = Umanager.getInstance().usrAuthentication(tryname, trypw);
                         if (successful == 1) {
+                            usr.id = 0;                           //Se recibiran los datos de la bd//
+                            usr.username = tryname;
+                            usr.password = trypw;
+                            usr.email = "default@eetac.edu";
                             usr.isadmin = true;                   // Se inicializa usr con derechos de administrador//
                             log4j.info("Access granted! Welcome admin "+tryname);
                         } else if  (successful == 0) {
+                            usr.id = 0;                           //Se recibiran los datos de la bd//
+                            usr.username = tryname;
+                            usr.password = trypw;
+                            usr.email = "default@eetac.edu";
                             usr.isadmin = false;                         // Se inicializa usr //
                             log4j.info("Access granted! Welcome user "+tryname);
                         } else if (successful == -1) log4j.info("Access denied.");
@@ -334,7 +346,6 @@ public class Main {
                         } else if (addefrst2 == -1) mjump = true;
                         break;
                     case 7:
-                        int sm2 = 1;
                         String uname = null;
                         String upassword = null;
                         String uemail = null;
@@ -342,44 +353,42 @@ public class Main {
                         while (sm2bucle) {
                             switch (sm2) {
                                 case 1:
-                                    if (!goto2bis) {
-                                        System.out.println(str14);
+                                    System.out.println(str14);
+                                    uname = s.nextLine();
+                                    while (uname.length() <= 2 || uname.length() >= 16 || Character.isDigit(uname.charAt(0))) {
+                                        System.out.println(str10);
                                         uname = s.nextLine();
-                                        while (uname.length() <= 2 || uname.length() >= 16 || Character.isDigit(uname.charAt(0))) {
-                                            System.out.println(str10);
-                                            uname = s.nextLine();
-                                        }
-                                        if (uname.equals("return")) {
-                                            sm2bucle = false;
-                                            break;
-                                        } else if (uname.equals("quit") || uname.equals("exit")) {
-                                            sm2bucle = false;
-                                            sm1bucle = false;
-                                            break;
-                                        }
+                                    }
+                                    if (uname.equals("return")) {
+                                        sm2bucle = false;
+                                        break;
+                                    } else if (uname.equals("quit") || uname.equals("exit")) {
+                                        sm2bucle = false;
+                                        mbucle = false;
+                                        break;
                                     }
                                 case 2:
                                     System.out.println(str13);
                                     upassword = s.nextLine();
                                     while (upassword.length() <= 2 || upassword.length() >= 16) {
-                                        System.out.println(str8);
+                                        System.out.println(str17);
                                         upassword = s.nextLine();
                                     }
                                     if (upassword.equals("return")) {
-                                        goto2bis = false;
+                                        sm1bucle = false;
                                         sm2 = 1;
-                                        sm1 = 7;
-                                        mjump = false;
+                                        mjump = true;
+                                        main = 7;
                                         break;
                                     }
-                                    if (upassword.equals("quit") || upassword.equals("exit")) {
+                                    else if (upassword.equals("quit") || upassword.equals("exit")) {
                                         sm2bucle = false;
                                         break;
                                     }
                                 case 3:
                                     System.out.println(str15);
                                     uemail = s.nextLine();
-                                    while (uemail.length() <= 2 || uemail.length() >= 20 || uemail.contains("@")) {
+                                    while (uemail.length() <= 2 || uemail.length() >= 20 || !uemail.contains("@")) {
                                         System.out.println("Introduzca un email valido.");
                                         uemail = s.nextLine();
                                     }
@@ -393,39 +402,40 @@ public class Main {
                                     if (uemail.equals("quit") || uemail.equals("exit")) {
                                         sm2bucle = false;
                                         break;
-                                    } break;
+                                    }
                                 case 4:
-                                    System.out.println(str16);
-                                    int res = Umanager.getInstance().setUserLoc(usr, new Location(41.27514444, 1.984991667));
-                                    if (res == 1) {
-                                        log4j.info("Localizacion guardada en el user: "+ usr.id);
-                                    }
-                                    if (res == -1) {
-                                    log4j.info("No se ha guardado correctamente la localizacion del user");
-                                    }
                                     try {
-
                                         User u = new User(uname, upassword, uemail);
-                                            Object utmp = Umanager.getInstance().addUserToUsersMap(u);
-                                            if (utmp == null) {
-                                                log4j.info("Usuario añadido correctamente! No se ha sobreescrito ningun Usuario anterior.");
-                                                sm1bucle = false;
-                                                break;
-                                            } else {
-                                                Field f = utmp.getClass().getField("id");
-                                                log4j.info("Usuario añadido correctamente! Se ha sobreescrito el Usuario: " + f.getInt(utmp));
-                                                break;
-                                            }
+                                        Location loc = new Location(41.27514444, 1.984991667);
+                                        Umanager.getInstance().setUserLoc(usr, u, loc);
+                                        Object utmp = Umanager.getInstance().addUserToUsersMap(usr, u);
+                                        if (utmp == null) {
+                                            log4j.info("Usuario añadido correctamente! No se ha sobreescrito ningun usuario anterior.");
+                                            System.out.println(str16);
+                                            sm2bucle = false;
+                                            sm1bucle = false;
+                                            break;
+                                        } else if (!(Boolean)utmp) {
+                                            u = null;
+                                            User.lastid--;
+                                            log4j.info("Usuario existente. No se pudo añadir al usuario.");
+                                            break;
+                                        }
+                                        else {
+                                            Field f = utmp.getClass().getField("id");
+                                            log4j.info("Usuario añadido correctamente! Se ha sobreescrito el Usuario: " + f.getInt(utmp));
+                                            break;
+                                        }
                                     } catch (AdminException e) {
                                         log4j.info("Necesitas ser administrador para usar esta funcion.");
-                                    } break;
-                            }
+                                    }
+                            } break;
                         }
                         if (uname.equals("return")) {
                             log4j.info("Volviendo al menu principal...");
                             break;
                         }
-                        if (uname.equals("quit") || uname.equals("exit") || upassword.equals("quit") || upassword.equals("exit") || uemail.equals("quit") || uemail.equals("exit")) {
+                        if (uname.equals("quit") || uname.equals("exit") || upassword.equals("quit") || upassword.equals("exit")) {
                             log4j.info("Cerrando el programa.");
                             mbucle = false;
                             break;
@@ -436,6 +446,11 @@ public class Main {
                         }
                         if (uemail.equals("return")) {
                             log4j.info("Volviendo al menu principal...");
+                            break;
+                        }
+                        if (uemail.equals("exit") || uemail.equals("exit")) {
+                            log4j.info("Volviendo al menu principal...");
+                            mbucle = false;
                             break;
                         }
                         break;
