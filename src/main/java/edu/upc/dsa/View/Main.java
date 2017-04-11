@@ -383,25 +383,26 @@ public class Main {
                                     }
                                     else if (upassword.equals("quit") || upassword.equals("exit")) {
                                         sm2bucle = false;
+                                        mbucle = false;
                                         break;
                                     }
                                 case 3:
                                     System.out.println(str15);
                                     uemail = s.nextLine();
-                                    while (uemail.length() <= 2 || uemail.length() >= 20 || !uemail.contains("@")) {
-                                        System.out.println("Introduzca un email valido.");
-                                        uemail = s.nextLine();
-                                    }
                                     if (uemail.equals("return")) {
-                                        goto2bis = false;
+                                        sm1bucle = false;
                                         sm2 = 2;
-                                        sm1 = 7;
-                                        mjump = false;
+                                        mjump = true;
+                                        main = 7;
                                         break;
                                     }
                                     if (uemail.equals("quit") || uemail.equals("exit")) {
                                         sm2bucle = false;
                                         break;
+                                    }
+                                    while (uemail.length() <= 2 || uemail.length() >= 20 || !uemail.contains("@")) {
+                                        System.out.println("Introduzca un email valido.");
+                                        uemail = s.nextLine();
                                     }
                                 case 4:
                                     try {
@@ -432,7 +433,7 @@ public class Main {
                             } break;
                         }
                         if (uname.equals("return")) {
-                            log4j.info("Volviendo al menu principal...");
+                            log4j.info("Volviendo...");
                             break;
                         }
                         if (uname.equals("quit") || uname.equals("exit") || upassword.equals("quit") || upassword.equals("exit")) {
@@ -441,15 +442,15 @@ public class Main {
                             break;
                         }
                         if (upassword.equals("return")) {
-                            log4j.info("Volviendo al menu principal...");
+                            log4j.info("Volviendo...");
                             break;
                         }
                         if (uemail.equals("return")) {
-                            log4j.info("Volviendo al menu principal...");
+                            log4j.info("Volviendo...");
                             break;
                         }
                         if (uemail.equals("exit") || uemail.equals("exit")) {
-                            log4j.info("Volviendo al menu principal...");
+                            log4j.info("Saliendo del programa...");
                             mbucle = false;
                             break;
                         }

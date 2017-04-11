@@ -96,3 +96,26 @@ WARN main edu.upc.dsa.View.Main - Fallo en el programa. No se le ha podido dar a
 INFO main edu.upc.dsa.View.Main - Ya esta en el menu principal.
 WARN main edu.upc.dsa.View.Main - Fallo en el programa. No se le ha podido dar autenticacion. DB vacia.
 WARN main edu.upc.dsa.View.Main - Fallo en el programa. No se le ha podido dar autenticacion. DB vacia.
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome admin marc
+INFO main edu.upc.dsa.View.Main - Usuario existente. No se pudo aÃ±adir al usuario.
+INFO main edu.upc.dsa.View.Main - Usuario aÃ±adido correctamente! No se ha sobreescrito ningun usuario anterior.
+INFO main edu.upc.dsa.View.Main - Usuario aÃ±adido correctamente! No se ha sobreescrito ningun usuario anterior.
+INFO main edu.upc.dsa.View.Main - Volviendo al menu principal...
+INFO main edu.upc.dsa.View.Main - Cerrando el programa.
+INFO main edu.upc.dsa.View.Main - Access denied.
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome user ivan
+INFO main edu.upc.dsa.View.Main - Volviendo al menu principal...
+INFO main edu.upc.dsa.View.Main - Cerrando el programa.
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome user ivan
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome user ivan
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome user ivan
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome user ivan
+INFO main edu.upc.dsa.View.Main - Access denied.
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome user ivan
+INFO main edu.upc.dsa.View.Main - Volviendo al menu principal...
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome user ivan
+INFO main edu.upc.dsa.View.Main - Volviendo...
+WARN main edu.upc.dsa.View.Main - Fallo en el programa. No se le ha podido dar autenticacion. DB vacia.
+INFO main edu.upc.dsa.View.Main - Access granted! Welcome user ivan
+INFO main edu.upc.dsa.View.Main - Volviendo...
+WARN main edu.upc.dsa.View.Main - Fallo en el programa. No se le ha podido dar autenticacion. DB vacia.
