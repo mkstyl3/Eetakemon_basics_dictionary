@@ -80,4 +80,8 @@ public class Umanager {
             }
         } return false;
     }
+
+    public HashMap <Integer, User> showAllUsersInHashmap(User u) {
+        return umap;
+    }
 }

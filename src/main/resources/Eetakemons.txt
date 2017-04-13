@@ -4,7 +4,7 @@
     "name":"Juanmon",
     "type":"Fuego",
     "lvl":"80",
-    "currentlocation": {
+    "currentloc": {
       "lat":null,
       "lon":null
     }
@@ -14,7 +14,7 @@
     "name":"Tonimon",
     "type":"Fuego",
     "lvl":"80",
-    "currentlocation": {
+    "currentloc": {
       "lat":null,
       "lon":null
     }
@@ -24,7 +24,7 @@
     "name":"Lluismon",
     "type":"Dragon",
     "lvl":"80",
-    "currentlocation": {
+    "currentloc": {
       "lat":null,
       "lon":null
     }
@@ -34,7 +34,7 @@
     "name":"Rinconmon",
     "type":"Fuego",
     "lvl":"80",
-    "currentlocation": {
+    "currentloc": {
       "lat":null,
       "lon":null
     }
@@ -44,7 +44,7 @@
     "name":"Gilabertmon",
     "type":"Fuego",
     "lvl":"80",
-    "currentlocation": {
+    "currentloc": {
       "lat":null,
       "lon":null
     }

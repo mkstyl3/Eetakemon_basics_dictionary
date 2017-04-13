@@ -16,9 +16,7 @@ import edu.upc.dsa.Model.User;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 
 //               La intencionalidad de este programa es aprender jugando con las funciones de clase de EetakemonGo //
@@ -33,11 +31,11 @@ public class Main {
         if(!u.emap.isEmpty()) {
             System.out.println("Lista de Eetakemons disponibles:");
             for (HashMap.Entry<Integer, Eetakemon> entry : u.emap.entrySet()) {
-                System.out.println(entry.getValue().id + ": " + entry.getValue().name + ", lvl " + entry.getValue().lvl);
+                System.out.println(entry.getValue().id + ": " + entry.getValue().name + ", lvl " + entry.getValue().lvl + entry.getValue().currentloc.lat + + entry.getValue().currentloc.lon);
             } return 1;
         }
         else {
-            System.out.println("Primero añada un Eetakemon");
+            System.out.println("Primero añada un Eetakemon. Reedirigiendo al menu de creacion de Eetakemons...");
             return -1;
         }
     }
@@ -45,11 +43,13 @@ public class Main {
 
         Scanner s = new Scanner(System.in);
         User usr = new User();
-        int main = 1;
+        int main = 1;                     // Las necesito static porque cambia su valor en el login.
+        int sm1 = 1;
+        int sm2 = 1;
         boolean mbucle = true;
         boolean mjump = false;
         int successful = -1;
-        int sm2 = 1;
+
 
         final StringBuffer sb = new StringBuffer("Menu principal. Escriba quit o exit para salir. Escriba return para volver a este menu.\n");
         sb.append("1. Añada un Eetakemon.\n");
@@ -59,7 +59,8 @@ public class Main {
         sb.append("5. Cargue 5 Eetakemons para pruebas (Solo se puede usar con tu HashMap de Eetakemons vacio).\n");
         sb.append("6. Añada una localizacion random a su Eetakemon.\n");
         sb.append("7. Añada un nuevo User.\n");
-        sb.append("8. Salir.\n");
+        sb.append("8. Listar todos los usuarios del Hashmap\n");
+        sb.append("9. Salir.\n");
 
         final String str = ("Menu de creacion de Eetakemons. Escriba quit o exit para salir. Escriba return para volver al menu principal.\n1. Introduzca el nombre del Eetakemon (Debe contener mas de 3 a 15 caracteres y no empezar por un numero):");
         final String str2 = ("2. Introduzca de que type es (\"Fuego\", \"Tierra\" o \"Dragon\"):");
@@ -78,15 +79,12 @@ public class Main {
         final String str17 = ("Tiene que introducir password valida (Debe contener de 3 a 15 caracteres:");
 
         while (mbucle) {
-            boolean bucle2 = true;
+            boolean bucle2 = true;     // Cada vez k recorran el bucle, se inicializen a true (k entren en todos los bucles, estas variables las utilizo para salirme de ellos)
             boolean sm1bucle = true;
             boolean sm2bucle = true;
             boolean bucle4 = true;
             boolean bucle5 = true;
-            boolean bucle6 = true;
-            String tmp = null;
-            boolean goto22 = false;
-            String trypw = null;
+            String tmp = null;                                          //La reutilizo cuando la necesito
             try {
                 while(successful == -1) {
                     System.out.print(sb2);
@@ -97,7 +95,7 @@ public class Main {
                         break;
                     }
                     System.out.print(str13);
-                    trypw = s.nextLine();
+                    String trypw = s.nextLine();
                     if (trypw.equals("quit") || trypw.equals("exit")) {
                         main = 8;
                         mjump = true;
@@ -132,32 +130,27 @@ public class Main {
                 mjump = false;
                 switch (main) {
                     case 1:
-                        int sm1 = 1;
-                        String ename = null;
-                        String etype = null;
+                        String ename = null; //Las necesito inicializadas a null xk luego habra un try que me las pida en el case 3
+                        String etype = null; //No reutilizo ciertas variables por legibilidad
                         int elvl;
-                        String tmp2 = null;
-                        String enameaprox = null;
-                        boolean goto2 = false;
                         while (sm1bucle) {
                             switch (sm1) {
                                 case 1:
-                                    if (!goto2) {
-                                        System.out.println(str);
+                                    System.out.println(str);
+                                    ename = s.nextLine();
+                                    while (ename.length() <= 2 || ename.length() >= 16 || Character.isDigit(ename.charAt(0))) {
+                                        System.out.println(str10);
                                         ename = s.nextLine();
-                                        while (ename.length() <= 2 || ename.length() >= 16 || Character.isDigit(ename.charAt(0))) {
-                                            System.out.println(str10);
-                                            ename = s.nextLine();
-                                        }
-                                        if (ename.equals("return")) {
-                                            sm1bucle = false;
-                                            mjump = false;
-                                            break;
-                                        }
-                                        if (ename.equals("quit") || ename.equals("exit")) {
-                                            sm1bucle = false;
-                                            break;
-                                        }
+                                    }
+                                    if (ename.equals("return")) {
+                                        sm1bucle = false; // para salir del bucle
+                                        main = 9;
+                                        break;
+                                    }
+                                    if (ename.equals("quit") || ename.equals("exit")) {
+                                        sm1bucle = false;
+                                        main = 9;
+                                        break;
                                     }
                                 case 2:
                                     System.out.println(str2);
@@ -167,41 +160,46 @@ public class Main {
                                         etype = s.nextLine();
                                     }
                                     if (etype.equals("return")) {
-                                        goto2 = false;
+                                        main = 1;
                                         sm1 = 1;
-                                        mjump = false;
+                                        mjump = true;
                                         break;
                                     }
                                     if (etype.equals("quit") || etype.equals("exit")) {
                                         sm1bucle = false;
+                                        mbucle = false;
                                         break;
                                     }
                                 case 3:
-                                    while (bucle2) { // para que en caso de input string regrese al case 3
+                                    while (bucle2) { // Para que en caso de input string regrese al case 3
                                         System.out.println(str3);
-                                        tmp2 = s.nextLine();
-                                        if (tmp2.equals("quit") || tmp2.equals("exit")) {
+                                        tmp = s.nextLine();
+                                        if (tmp.equals("quit") || tmp.equals("exit")) {
                                             sm1bucle = false;
+                                            mbucle = false;
                                             break;
                                         }
-                                        if (tmp2.equals("return")) {
-                                            goto2 = true;
-                                            mjump = false;
+                                        if (tmp.equals("return")) {
+                                            main = 1;
+                                            sm1 = 2;
+                                            mjump = true;
                                             break;
                                         }
                                         try {
-                                            elvl = Integer.parseInt(tmp2);
+                                            elvl = Integer.parseInt(tmp);
                                             if (elvl > 0 && elvl < 101) {
                                                 Eetakemon e = new Eetakemon(ename, etype, elvl);
                                                 Object etmp = Emanager.getInstance().addEetakemonToUserMap(usr, e);
                                                 if (etmp == null) {
                                                     log4j.info("Eetakemon añadido correctamente! No se ha sobreescrito ningun Eetakemon anterior.");
                                                     sm1bucle = false;
+                                                    sm1 = 1;
                                                     break;
                                                 } else {
                                                     Field f = etmp.getClass().getField("id");
                                                     log4j.info("Eetakemon añadido correctamente! Se ha sobreescrito el Eetakemon: " + f.getInt(etmp));
                                                     sm1bucle = false;
+                                                    sm2 = 1;
                                                     break;
                                                 }
                                             }
@@ -211,45 +209,29 @@ public class Main {
                                         }
                                     }
                             }
-                        }
-                        if (ename.equals("return")) {
-                            log4j.info("Volviendo al menu principal...");
-                            break;
-                        }
-                        if (ename.equals("quit") || ename.equals("exit") || etype.equals("quit") || etype.equals("exit") || tmp2.equals("quit") || tmp2.equals("exit")) {
-                            log4j.info("Cerrando el programa.");
-                            mbucle = false;
-                            break;
-                        }
-                        if (etype.equals("return")) {
-                            log4j.info("Volviendo al menu principal...");
-                            break;
-                        }
-                        if (tmp2.equals("return")) {
-                            log4j.info("Volviendo al menu principal...");
-                            break;
-                        }
-                        break;
+                        } break;
                     case 2:
-                        int i = showEetakemons(usr);
-                        if (i == -1) mjump = true;
+                        int i = showEetakemons(usr); // La propia funcion ya retorna sus propios int
+                        if (i == -1){
+                            mjump = true; // Es necesario colocarlo aqui porque mjump es una variable del main, no del la clase Main.
+                            main = 1;
+                        }
                         break;
                     case 3:
                         int addefrst = showEetakemons(usr);
                         if (addefrst == 1) {
-                            String tmp3;
-                            while (bucle4) { // para que en caso de input string regrese al case 3
+                            while (bucle4) { // Para que en caso de input string regrese al case 3
                                 System.out.println(str4);
-                                tmp3 = s.nextLine();
-                                if (tmp3.equals("quit") || tmp3.equals("exit")) {
+                                tmp = s.nextLine();
+                                if (tmp.equals("quit") || tmp.equals("exit")) {
                                     mbucle = false;
                                     break;
                                 }
-                                if (tmp3.equals("return")) {
+                                if (tmp.equals("return")) {
                                     break;
                                 }
                                 try {
-                                    int rmid = Integer.parseInt(tmp3);
+                                    int rmid = Integer.parseInt(tmp);
                                     Eetakemon nulle = Emanager.getInstance().delEetakemonFromMap(usr, rmid);
                                     if (nulle != null) {
                                         log4j.info("Eetakemon borrado correctamente!");
@@ -260,13 +242,16 @@ public class Main {
                                 }
                             }
                             break;
-                        } else if (addefrst == -1) mjump = true;
+                        } else if (addefrst == -1) {
+                            main = 1;
+                            mjump = true;
+                        }
                         break;
                     case 4:
                         if (!usr.emap.isEmpty()) {
                             while (bucle5) {
                                 System.out.println(str11);
-                                enameaprox = s.nextLine();
+                                String enameaprox = s.nextLine();
                                 if (enameaprox.equals("return")) {
                                     break;
                                 }
@@ -296,7 +281,8 @@ public class Main {
                             }
                         } else {
                             mjump = true;
-                            log4j.info("Primero introduzca un Eetakemon!");
+                            main = 1;
+                            log4j.info("Primero añada un Eetakemon. Reedirigiendo al menu de creacion de Eetakemons...");
                         }
                         break;
                     case 5:
@@ -320,19 +306,19 @@ public class Main {
                     case 6:
                         int addefrst2 = showEetakemons(usr);
                         if (addefrst2 == 1) {
-                            String tmp4;
                             while (bucle4) { // para que en caso de input string regrese al case 3
                                 log4j.info("Inserte una nueva localizacion random a su Eetakemon mediante su id. Escriba return para volver a atras o escriba quit o exit para salir.");
-                                tmp4 = s.nextLine();
-                                if (tmp4.equals("quit") || tmp4.equals("exit")) {
-                                    mbucle = false;
+                                tmp = s.nextLine();
+                                if (tmp.equals("quit") || tmp.equals("exit")) {
+                                    main = 1;
+                                    sm1 = 1;
                                     break;
                                 }
-                                if (tmp4.equals("return")) {
+                                if (tmp.equals("return")) {
                                     break;
                                 }
                                 try {
-                                    int rmid = Integer.parseInt(tmp4);
+                                    int rmid = Integer.parseInt(tmp);
                                     if (rmid > 0 && rmid <= usr.emap.size()) {
                                         Lmanager.getInstance().setEtakemonRandLocationByType(Emanager.getInstance().getEetakemonFromMap(usr, rmid));
                                         log4j.info("La nueva localizacion es lat: " + usr.emap.get(rmid).currentloc.lat + " lon: " + usr.emap.get(rmid).currentloc.lon);
@@ -375,10 +361,10 @@ public class Main {
                                         upassword = s.nextLine();
                                     }
                                     if (upassword.equals("return")) {
-                                        sm1bucle = false;
+                                        sm2bucle = false;
+                                        main = 7;
                                         sm2 = 1;
                                         mjump = true;
-                                        main = 7;
                                         break;
                                     }
                                     else if (upassword.equals("quit") || upassword.equals("exit")) {
@@ -391,13 +377,14 @@ public class Main {
                                     uemail = s.nextLine();
                                     if (uemail.equals("return")) {
                                         sm1bucle = false;
+                                        main = 7;
                                         sm2 = 2;
                                         mjump = true;
-                                        main = 7;
                                         break;
                                     }
                                     if (uemail.equals("quit") || uemail.equals("exit")) {
                                         sm2bucle = false;
+                                        mbucle = false;
                                         break;
                                     }
                                     while (uemail.length() <= 2 || uemail.length() >= 20 || !uemail.contains("@")) {
@@ -432,30 +419,24 @@ public class Main {
                                     }
                             } break;
                         }
-                        if (uname.equals("return")) {
-                            log4j.info("Volviendo...");
-                            break;
-                        }
-                        if (uname.equals("quit") || uname.equals("exit") || upassword.equals("quit") || upassword.equals("exit")) {
-                            log4j.info("Cerrando el programa.");
-                            mbucle = false;
-                            break;
-                        }
-                        if (upassword.equals("return")) {
-                            log4j.info("Volviendo...");
-                            break;
-                        }
-                        if (uemail.equals("return")) {
-                            log4j.info("Volviendo...");
-                            break;
-                        }
-                        if (uemail.equals("exit") || uemail.equals("exit")) {
-                            log4j.info("Saliendo del programa...");
-                            mbucle = false;
-                            break;
-                        }
                         break;
                     case 8:
+                        HashMap<Integer, User> tmphmap = Umanager.getInstance().showAllUsersInHashmap(usr);
+                        if (tmphmap.isEmpty()) {
+                            log4j.warn("Hashmap vacio. No se pudo devolver ningun user.");
+                            sm1bucle = false;
+                            mjump = true;
+                            main = 7;
+                            break;
+                        }
+                        else {
+                            log4j.info("Lista de Eetakemons disponibles:");
+                            for (HashMap.Entry<Integer, User> entry : tmphmap.entrySet()) {
+                                log4j.info(entry.getValue().id + ": " + entry.getValue().username + ",  con email: " + entry.getValue().email);
+                            }
+                            break;
+                        }
+                    case 9:
                         mbucle = false;
                         break;
                     default:
@@ -473,7 +454,7 @@ public class Main {
                     log4j.info("Para seleccionar una opcion del menu debe escribir un numero.");
                 }
             } catch (NullPointerException e) {
-                log4j.warn("Fallo en el programa. No se le ha podido dar autenticacion. DB vacia.");
+                log4j.warn("Fallo en el programa. Null pointer ex.");
             } catch (MissingResourceException e) {
                 log4j.info("Fallo en el programa. No se le ha podido dar autenticacion. Usuario inexistente.");
             }
