@@ -32,7 +32,7 @@ public class Umanager {
        //Boolean bool = fa;
         if (usr.isadmin) {
             //Properties prop = new Properties();
-            //prop.setProperty(newusr.username,newusr.password); //No se puede escribir en el properties...
+            //prop.setProperty(newusr.username,newusr.password); //No se puede escribir en el properties siendo un rb?...
             //File fileout = new File("Users_data.properties");
             //prop.store(new FileOutputStream(fileout), null);
             if(!userCheck(rbdata,newusr.username, newusr.password))
@@ -43,17 +43,17 @@ public class Umanager {
             throw new AdminException();
         }
     }
+    public User getUserFromMap(User usr, int key) throws AdminException {
+        if (usr.isadmin) {
+            return umap.get(key);
+        } else throw new AdminException();
 
-    public Object delUserFromMap(int key) {
-        return umap.remove(key);
     }
 
-    public Object getUserFromMap(int key) {
-        return umap.get(key);
-    }
-
-    public void delUsersFromMap() {
-        umap.clear();
+    public void delUsersFromMap(User usr) throws AdminException {
+        if (usr.isadmin) {
+            umap.clear();
+        } else throw new AdminException();
     }
 
     public int usrAuthentication(String usrname, String pw) throws NullPointerException, MissingResourceException {
@@ -81,7 +81,16 @@ public class Umanager {
         } return false;
     }
 
-    public HashMap <Integer, User> showAllUsersInHashmap(User u) {
-        return umap;
+    public HashMap <Integer, User> showAllUsersInHashmap(User usr) throws AdminException {
+        if (usr.isadmin) {
+            return umap;
+        } else throw new AdminException();
+
+    }
+
+    public User delUserFromMap(User usr, int key) throws AdminException {
+        if (usr.isadmin) {
+            return umap.remove(key);
+        } else throw new AdminException();
     }
 }
