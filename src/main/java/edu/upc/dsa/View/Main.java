@@ -31,7 +31,7 @@ public class Main {
         if(!u.emap.isEmpty()) {
             log4j.info("Lista de Eetakemons disponibles:");
             for (HashMap.Entry<Integer, Eetakemon> entry : u.emap.entrySet()) {
-                log4j.info(entry.getValue().id + ": " + entry.getValue().name + ", lvl " + entry.getValue().lvl + entry.getValue().currentloc.lat + +entry.getValue().currentloc.lon);
+                log4j.info(entry.getValue().id + ": " + entry.getValue().name + ", lvl: " + entry.getValue().lvl + ", loc: "+entry.getValue().currentloc.lat +","+entry.getValue().currentloc.lon);
             } return 1;
         }
         else {
@@ -49,7 +49,6 @@ public class Main {
         boolean mbucle = true;
         boolean mjump = false;
         int successful = -1;
-
 
         final StringBuffer sb = new StringBuffer("Menu principal. Escriba quit o exit para salir. Escriba return para volver a este menu.\n");
         sb.append("1. Añada un Eetakemon.\n");
@@ -182,7 +181,7 @@ public class Main {
                                     try {
                                         elvl = Integer.parseInt(tmp);
                                         if (elvl > 0 && elvl < 101) {
-                                            Eetakemon e = new Eetakemon(ename, etype, elvl);
+                                            Eetakemon e = new Eetakemon(ename, etype, elvl, 53.3213, 5.892734); //Le añado una loc random porque si.
                                             Object etmp = Emanager.getInstance().addEetakemonToUserMap(usr, e);
                                             if (etmp == null) {
                                                 log4j.info("Eetakemon añadido correctamente! No se ha sobreescrito ningun Eetakemon anterior.");
@@ -282,7 +281,7 @@ public class Main {
                         if (usr.emap.isEmpty()) {
                             log4j.info(str12);
                             try {
-                                Emanager.getInstance().loadEetakemonsMap(usr);
+                                Emanager.getInstance().loadEetakemonsUsersMap(usr);
                                 showEetakemons(usr);
                                 log4j.info("Sus Eetakemons se cargaron con exito!");
                             } catch (FileNotFoundException e) {
@@ -386,13 +385,7 @@ public class Main {
                                         log4j.info("Usuario añadido correctamente! No se ha sobreescrito ningun usuario anterior.");
                                         log4j.info(str16);
                                         break;
-                                    } else if (!(Boolean)utmp) {
-                                        u = null;
-                                        User.lastid--;
-                                        log4j.warn("Usuario existente. No se pudo añadir al usuario.");
-                                        break;
-                                    }
-                                    else {
+                                    } else {
                                         Field f = utmp.getClass().getField("id");
                                         log4j.info("Usuario añadido correctamente! Se ha sobreescrito el Usuario: " + f.getInt(utmp));
                                         break;
@@ -438,8 +431,8 @@ public class Main {
                                         break;
                                     }
                                     int rmid = Integer.parseInt(tmp);
-                                    User nulle = Umanager.getInstance().delUserFromMap(usr, rmid);
-                                    if (nulle != null) {
+                                    User nullu = Umanager.getInstance().delUserFromMap(usr, rmid);
+                                    if (nullu != null) {
                                         log4j.info("User: " + rmid + " borrado correctamente!");
                                         break;
                                     } else {
@@ -460,13 +453,47 @@ public class Main {
                             }
                         } break;
                     case 10:
-                        try {
-                            Umanager.getInstance().delUsersFromMap(usr);
-                            log4j.info("Se han borrado todos los users del Hashmap.");
-                        } catch(AdminException e){
-                            log4j.fatal("Necesitas ser administrador para usar esta funcion.");
-                        }
-                        break;
+                        while (tmpbucle) {
+                            try {
+                                HashMap<Integer, User> tmphmap = Umanager.getInstance().showAllUsersInHashmap(usr);
+                                if (tmphmap.isEmpty()) {
+                                    log4j.warn("Hashmap vacio. No se pudo borrar ningun user.");
+                                    mjump = true;
+                                    main = 7;
+                                    break;
+                                } else {
+                                    log4j.info("Lista de users disponibles:");
+                                    for (HashMap.Entry<Integer, User> entry : tmphmap.entrySet()) {
+                                        log4j.info(entry.getValue().id + ": " + entry.getValue().username);
+                                    }
+                                    log4j.info("Seguro que desea borrarlos? Escriba Y o N. Tambien puede escribir return o exit para salir.");
+                                    tmp = s.nextLine();
+                                    while (!(tmp.equals("Y") || tmp.equals("N") || tmp.equals("exit") || tmp.equals("quit") || tmp.equals("return"))) {
+                                        log4j.info(str8);
+                                        tmp = s.nextLine();
+                                    }
+                                    switch (tmp) {
+                                        case "return":
+                                        case "N":
+                                            tmpbucle = false;
+                                            break;
+                                        case "quit":
+                                        case "exit":
+                                            mbucle = false;
+                                            break;
+                                        default:
+                                            Umanager.getInstance().delUsersFromMap(usr);
+                                            log4j.info("Los usuarios se borraron correctamente.");
+                                            tmpbucle = false;
+                                            break;
+                                    }
+                                }
+                            } catch (AdminException e) {
+                                log4j.fatal("Necesitas ser administrador para usar esta funcion.");
+                            } catch (NumberFormatException e) {
+                                log4j.warn("Debe ser un correspondiente a alguna id.");
+                            }
+                        } break;
                     case 11:
                         while (tmpbucle) {
                             try {
@@ -480,7 +507,7 @@ public class Main {
                                 else {
                                     log4j.info("Lista de users disponibles:");
                                     for (HashMap.Entry<Integer, User> entry : tmphmap.entrySet()) {
-                                        log4j.info(entry.getValue().id + ": " + entry.getValue().username + ",  con email: " + entry.getValue().email);
+                                        log4j.info(entry.getValue().id + ": " + entry.getValue().username);
                                     }
                                     log4j.info("Escriba el id del user que desea explorar: ");
                                     tmp = s.nextLine();
@@ -492,12 +519,17 @@ public class Main {
                                         break;
                                     }
                                     int getid = Integer.parseInt(tmp);
-                                    User nulle = Umanager.getInstance().getUserFromMap(usr, getid);
-                                    log4j.info("id: "+nulle.);
-                                break;
+                                    User nullu = Umanager.getInstance().getUserFromMap(usr, getid);
+                                    if (nullu != null) {
+                                        log4j.info("id: "+nullu.id+" username: "+nullu.username+" password: "+nullu.password+" email: "+nullu.email+" current location: ("+nullu.currentloc.lat+","+nullu.currentloc.lat+") isadmin: "+nullu.isadmin);
+                                        break;
+                                    } else log4j.warn("No hay ningun user con esa id.");
+                                }
+                            } catch (AdminException e) {
+                                log4j.fatal("Necesitas ser administrador para usar esta funcion.");
+                            } catch (NumberFormatException e) {
+                                log4j.warn("Debe ser un correspondiente a alguna id.");
                             }
-                        } catch (AdminException e) {
-                            log4j.fatal("Necesitas ser administrador para usar esta funcion.");
                         } break;
                     case 12:
                         mbucle = false;

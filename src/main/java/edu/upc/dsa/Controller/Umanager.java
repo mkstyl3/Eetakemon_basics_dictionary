@@ -1,19 +1,23 @@
 package edu.upc.dsa.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import edu.upc.dsa.Model.Eetakemon;
 import edu.upc.dsa.Model.Location;
 import edu.upc.dsa.Model.User;
 
 import javax.swing.text.StyledEditorKit;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
  * Created by $uperuser on 23/03/2017.
  */
-public class Umanager {
+public class Umanager implements IUmanager {
     public static HashMap<Integer, User> umap;
-    public static int ultimoid = 1;
     private static Umanager instance = null;
     ResourceBundle rbdata = ResourceBundle.getBundle("Users_data");
     ResourceBundle rbadmin = ResourceBundle.getBundle("Admin_users");
@@ -29,17 +33,13 @@ public class Umanager {
     }
 
     public Object addUserToUsersMap(User usr, User newusr) throws AdminException {
-       //Boolean bool = fa;
         if (usr.isadmin) {
             //Properties prop = new Properties();
             //prop.setProperty(newusr.username,newusr.password); //No se puede escribir en el properties siendo un rb?...
             //File fileout = new File("Users_data.properties");
             //prop.store(new FileOutputStream(fileout), null);
-            if(!userCheck(rbdata,newusr.username, newusr.password))
-                return umap.put(newusr.id, newusr);
-            else return false;
-        }
-        else {
+            return umap.put(newusr.id, newusr);
+        } else {
             throw new AdminException();
         }
     }
@@ -87,7 +87,6 @@ public class Umanager {
         } else throw new AdminException();
 
     }
-
     public User delUserFromMap(User usr, int key) throws AdminException {
         if (usr.isadmin) {
             return umap.remove(key);

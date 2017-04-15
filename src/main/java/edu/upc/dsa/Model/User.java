@@ -19,13 +19,23 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.emap = new HashMap<>();
-        this.id = lastid;
+        emap = new HashMap<>();
+        id = lastid;
+        lastid++;
+    }
+    public User (String username, String password, String email, Boolean isadmin, double lat, double lon) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.isadmin = isadmin;
+        emap = new HashMap<>();
+        currentloc = new Location(lat,lon);
+        id = lastid;
         lastid++;
     }
     public User() {
-        this.emap = new HashMap<>();
-        this.id = lastid;
+        emap = new HashMap<>();
+        id = lastid;
         lastid++;
     }
 

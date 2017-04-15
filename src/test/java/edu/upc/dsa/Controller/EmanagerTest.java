@@ -9,49 +9,49 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Created by $uperuser on 12/03/2017.
  */
 public class EmanagerTest {
-    Emanager em = new Emanager();
     User usr = new User();
 
-    @Test
-    public void loadEetakemonsMapTest() throws FileNotFoundException, JsonIOException, JsonSyntaxException {
-
-        em.loadEetakemonsMap(usr);
-        Assert.assertEquals(5, usr.emap.size());
-    }
-    @Before
-    public void setUp() throws IOException {
-        em.loadEetakemonsMap(usr);
-
+    @Before public void loadEetakemonsUsersMapTest() throws FileNotFoundException, JsonIOException, JsonSyntaxException {
+        try {
+            Emanager.getInstance().loadEetakemonsUsersMap(usr);
+        } catch (FileNotFoundException e) {
+            Assert.fail("No se encontro el fichero txt con los Eetakemons.");
+        } catch (JsonIOException e) {
+            Assert.fail("Hubo algun problema al leer del reader.");
+        } catch (JsonSyntaxException e) {
+            Assert.fail("Problema de sintaxis en el JSON");
+        }
     }
     @After
     public void tearDown() {
-        em.delAllEetakemonsFromMap(usr);
+        Emanager.getInstance().delAllEetakemonsFromMap(usr);
+        usr=null;
+        Umanager.umap.clear();
     }
     @Test
     public  void addEetakemonToUserMapTest() {
-        Object tmpobj = em.addEetakemonToUserMap(usr, usr.emap.get(1));
+        Object tmpobj = Emanager.getInstance().addEetakemonToUserMap(usr, usr.emap.get(1));
         Assert.assertNotEquals(null, tmpobj);
     }
     @Test
     public void delEetakemonFromMapTest() {
-        em.delEetakemonFromMap(usr, 1);
+        Emanager.getInstance().delEetakemonFromMap(usr, 1);
         Assert.assertNotEquals(6, usr.emap.size());
     }
     @Test
     public void getEetakemonFromMapTest() {
-        int two = em.getEetakemonFromMap(usr, 2).id;
+        int two = Emanager.getInstance().getEetakemonFromMap(usr, 2).id;
         Assert.assertEquals(2, two);
     }
     @Test
     public void getEtakemonFromMapByNameAproximationTest() {
-        ArrayList<Eetakemon> reslist = em.getEtakemonFromMapByNameAproximation(usr, "nmon");
+        ArrayList<Eetakemon> reslist = Emanager.getInstance().getEtakemonFromMapByNameAproximation(usr, "nmon");
         Assert.assertEquals("Juanmon", reslist.get(0).name);
         Assert.assertEquals("Rinconmon", reslist.get(1).name);
     }

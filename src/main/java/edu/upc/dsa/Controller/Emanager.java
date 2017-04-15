@@ -23,26 +23,15 @@ public class Emanager implements IEmanager {
         if (instance == null) instance = new Emanager();
         return instance;
     }
-    @Override
-    public void loadEetakemonsMap(User usr) throws FileNotFoundException, JsonIOException, JsonSyntaxException {
-        BufferedReader reader = new BufferedReader(new FileReader(new File("./src/main/resources/Eetakemons.txt")));
-        Type type = new TypeToken<Map<Integer, Eetakemon>>(){}.getType();
-        usr.emap = new Gson().fromJson(reader, type);
-        Eetakemon.lastid = usr.emap.size() + 1; //Actualizo a 6, xk cargo 5 Eetakemons
-    }
-    @Override
     public Eetakemon addEetakemonToUserMap(User usr, Eetakemon e) {
         return usr.emap.put(e.id, e);
     }
-    @Override
     public Eetakemon delEetakemonFromMap(User usr, int key) {
         return usr.emap.remove(key);
     }
-    @Override
     public Eetakemon getEetakemonFromMap(User usr, int key) {
         return usr.emap.get(key);
     }
-    @Override
     public ArrayList<Eetakemon> getEtakemonFromMapByNameAproximation (User usr, String input) {
         ArrayList<Eetakemon> aproxlist = new ArrayList<>();
         for (Map.Entry<Integer,Eetakemon> entry : usr.emap.entrySet()) {
@@ -52,9 +41,14 @@ public class Emanager implements IEmanager {
         }
         return aproxlist;
     }
-    @Override
     public void delAllEetakemonsFromMap(User usr) {
         usr.emap.clear();
+    }
+    public void loadEetakemonsUsersMap(User usr) throws FileNotFoundException, JsonIOException, JsonSyntaxException {
+        BufferedReader reader = new BufferedReader(new FileReader(new File("./src/main/resources/Eetakemons.txt")));
+        Type type = new TypeToken<Map<Integer, Eetakemon>>(){}.getType();
+        usr.emap = new Gson().fromJson(reader, type);
+        Eetakemon.lastid = usr.emap.size() + 1; //Actualizo a 6 xk cargo 5 Eetakemons
     }
 
 }

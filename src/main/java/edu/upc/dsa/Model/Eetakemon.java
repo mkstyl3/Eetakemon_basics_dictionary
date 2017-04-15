@@ -16,11 +16,12 @@ public class Eetakemon {
         this.id = lastid;
         lastid++;
     }
-    public Eetakemon (String name, String type, int lvl) {
+    public Eetakemon (String name, String type, int lvl, double lat, double lon) {
         this.id = lastid;
         this.name = name;
         this.type = type;
         this.lvl = lvl;
+        this.currentloc = new Location(lat,lon);
         lastid++;
     }
     public void setEetakemonLocation(Location loc) {
